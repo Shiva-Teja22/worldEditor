@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>World Editor</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="https://i.scdn.co/image/ab67616d00001e02dbea8c7661303ef4636cbc54" type="image/png">
+    
+</head>
+
+<body>
+    <h1>World Editor</h1>
+    <canvas id="mycanvas"></canvas>
+    <div id="controls"></div>
+
+    <!-- Import scripts -->
+    <script src="js/math/utils.js"></script>
+    <script src="js/math/graph.js"></script>
+    <script src="js/primitives/point.js"></script>
+    <script src="js/primitives/segment.js"></script>
+    <script src="js/graphEditor.js"></script>
+    <script src="js/viewport.js"></script>
+
+    <script>
+        const mycanvas = document.getElementById("mycanvas");
+        mycanvas.width = 10;
+        mycanvas.height = 10;
+
+        const viewport = new Viewport(mycanvas);   // create viewport first
+        const graph = new Graph(); 
+        const graphEditor = new GraphEditor(viewport, graph); // fixed ctx issue
+
+        const canvas = document.getElementById("mycanvas");
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const viewport1 = new Viewport(canvas);
+const graph1 = new Graph();
+const editor = new GraphEditor(viewport, graph);
+
+function animate() {
+    editor.display();
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+
+        function animate() {
+            graphEditor.display();   // display already clears + applies transform
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+body{
+    background: #000;
+    text-align: center;
+}
+
+h1{
+    color: #fff;
+    font-family:  monospace;
+}
+
+#mycanvas{
+    background-color: rgb(86, 255, 86);
+}
