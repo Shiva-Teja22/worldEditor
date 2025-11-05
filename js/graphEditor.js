@@ -19,20 +19,32 @@ class GraphEditor {
         this.canvas.addEventListener("contextmenu", e => e.preventDefault());
     }
 
-    #onDown(e) {
-        this.mouse = this.viewport.getMouse(e); // use viewport coordinates
+   #onDown(e) {
+    // only react to left (0) or right (2) buttons
+    if (e.button !== 0 && e.button !== 2) return;
 
-        if (e.button === 2) return this.#removePoint(this.hovered);
+    this.mouse = this.viewport.getMouse(e);
 
-        if (this.hovered) {
-            this.#select(this.hovered);
-        } else {
+    if (e.button === 2) {
+        // right click = remove
+        return this.#removePoint(this.hovered);
+    }
+
+    // left click = select or add
+    if (this.hovered) {
+        this.#select(this.hovered);
+    } else {
+        const near = getNearestPoint(this.mouse, this.graph.points, 5);
+        if (!near) {
             this.graph.addPoint(this.mouse);
             this.#select(this.mouse);
+        } else {
+            this.#select(near);
         }
-        this.dragging = true;
-        this.display();
     }
+    this.dragging = true;
+    this.display();
+}
 
     #onMove(e) {
         this.mouse = this.viewport.getMouse(e); // fixed: use viewport coords
@@ -54,6 +66,13 @@ class GraphEditor {
         this.display();
     }
 
+    dispose(){
+        this.graph.dispose();
+        this.selected = null;
+        this.hovered = null;
+        
+    }
+
     display() {
         // clear using viewport to respect zoom/pan
         this.viewport.clear();
@@ -63,7 +82,7 @@ class GraphEditor {
         graph.draw(ctx);
 
         if (!dragging && selected && mouse) {
-            new Segment(selected, hovered || mouse).draw(ctx, { dash: [3, 3], color: "gray" });
+            new Segment(selected, hovered || mouse).draw(ctx, { dash: [3, 3], color: "#646464ff" });
             selected.draw(ctx, { outline: true });
         }
         if (hovered && hovered !== selected) hovered.draw(ctx, { fill: true });
