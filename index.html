@@ -7,10 +7,15 @@
     
 </head>
 
+
 <body>
     <h1>World Editor</h1>
     <canvas id="mycanvas"></canvas>
-    <div id="controls"></div>
+    <div id="controls">
+        <button onclick="dispose()">📁 CLEAR THE STORAGE</button>
+        <button onclick="dispose0()">🗑️ CLEAR</button>
+        <button onclick="save()">💾 SAVE</button>
+    </div>
 
     <!-- Import scripts -->
     <script src="js/math/utils.js"></script>
@@ -22,30 +27,39 @@
 
     <script>
         const mycanvas = document.getElementById("mycanvas");
-        mycanvas.width = 10;
-        mycanvas.height = 10;
-
-        const viewport = new Viewport(mycanvas);   // create viewport first
-        const graph = new Graph(); 
+        
+        const graphSting = localStorage.getItem("graph");
+        const graphInfo = graphSting ? JSON.parse(graphSting) : null;
+        const viewport = new Viewport(mycanvas);   
+        const graph = graphInfo ? Graph.load(graphInfo) : new Graph(); 
         const graphEditor = new GraphEditor(viewport, graph); // fixed ctx issue
 
         const canvas = document.getElementById("mycanvas");
 
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth - 70;
+    canvas.height = window.innerHeight - 135;
 }
 
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-const viewport1 = new Viewport(canvas);
-const graph1 = new Graph();
-const editor = new GraphEditor(viewport, graph);
-
 function animate() {
-    editor.display();
+    graphEditor.display();
     requestAnimationFrame(animate);
+}
+
+function dispose(){
+    graphEditor.dispose();
+    localStorage.removeItem("graph");
+}
+
+function dispose0(){
+    graphEditor.dispose();
+}
+
+function save(){
+    localStorage.setItem("graph", JSON.stringify(graph));
 }
 
 animate();
