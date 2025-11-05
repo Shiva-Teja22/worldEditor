@@ -14,6 +14,8 @@ class Viewport {
         this.lastY = 0;
 
         this.#addEventListeners();
+
+        
     }
 
     getMouse(evt) {
@@ -75,6 +77,8 @@ this.canvas.addEventListener("mouseup", () => {
 
         this.zoom = newZoom;
     }
+
+
 
     applyTransform() {
         // apply zoom + pan to the canvas context
